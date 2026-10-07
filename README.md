@@ -1,271 +1,124 @@
-# 🌡️ IoT Environment Monitor with Threshold Alerts
+# IoT Environment Monitor with Threshold Alerts
 
-An IoT-based environmental monitoring project using an ESP32, DHT22 temperature/humidity sensor, PIR motion sensor, LED alert, and ThingSpeak cloud dashboard.
+An IoT-based environment monitoring system built using ESP32, DHT22, PIR motion sensor, LED, Wokwi simulation, and Blynk Cloud.
 
-The project can be simulated completely in Wokwi, so physical hardware is not required.
+The system monitors temperature, humidity, and motion. When a predefined threshold is exceeded or motion is detected, an alert is generated and the red LED turns ON.
 
----
+## Features
 
-## 🎯 Project Objective
+- Real-time temperature monitoring
+- Real-time humidity monitoring
+- Motion detection using PIR sensor
+- Temperature threshold alert
+- Humidity threshold alert
+- Motion detection alert
+- Red LED alert indicator
+- Blynk Cloud dashboard
+- Serial Monitor output
+- Fully tested using Wokwi simulation
 
-The objective is to build an IoT system that:
+## Hardware Components
 
-- Collects temperature and humidity data
-- Detects motion
-- Sends sensor readings to a cloud dashboard
-- Checks sensor values against thresholds
-- Activates an alert when a threshold is exceeded
-- Demonstrates basic IoT security risks
+- ESP32 DevKit C V4
+- DHT22 Temperature and Humidity Sensor
+- PIR Motion Sensor
+- Red LED
+- 220Ω Resistor
 
----
+## Software and Platforms
 
-## 🏗️ System Architecture
+- Arduino/C++
+- Wokwi
+- Blynk Cloud
+- ESP32 Wi-Fi
 
-```text
-DHT22 Sensor
-     │
-     ├── Temperature
-     └── Humidity
-            │
-            ▼
-        ┌─────────┐
-PIR ───►│  ESP32  │
-Sensor  └────┬────┘
-             │
-             │ Wi-Fi
-             ▼
-       ┌────────────┐
-       │ ThingSpeak │
-       │ Dashboard  │
-       └────────────┘
-             
-             │
-             ▼
-       Threshold Check
-             │
-             ▼
-       Warning LED
-```
+## Pin Connections
 
-Then continue with:
-
-```markdown
----
-
-## 🧰 Components
-
-| Component | Purpose |
+| Component | ESP32 Pin |
 |---|---|
-| ESP32 | Main IoT controller |
-| DHT22 | Temperature and humidity sensor |
-| PIR sensor | Motion detection |
-| LED | Local warning indicator |
-| 220Ω resistor | LED current limiting |
-| Wokwi | Hardware simulation |
-| ThingSpeak | Cloud dashboard |
+| DHT22 Data | GPIO 15 |
+| PIR OUT | GPIO 13 |
+| Red LED | GPIO 2 |
 
----
+## Alert Thresholds
 
-## 🔌 Circuit Connections
-
-### DHT22
-
-| DHT22 Pin | ESP32 |
+| Parameter | Threshold |
 |---|---|
-| VCC | 3.3V |
-| DATA | GPIO 15 |
-| GND | GND |
+| Temperature | > 35°C |
+| Humidity | > 80% |
+| Motion | Detected |
 
-### PIR Sensor
+When any alert condition occurs, the red LED turns ON and the alert status is sent to Blynk.
 
-| PIR Pin | ESP32 |
+## Blynk Dashboard
+
+The system sends the following values to Blynk Cloud:
+
+| Virtual Pin | Data |
 |---|---|
-| VCC | 5V |
-| OUT | GPIO 13 |
-| GND | GND |
+| V0 | Temperature |
+| V1 | Humidity |
+| V2 | Motion |
+| V3 | Alert Status |
 
-### LED
-
-```text
-ESP32 GPIO 2
-     │
-     ▼
-  220Ω resistor
-     │
-     ▼
-    LED
-     │
-     ▼
-    GND
-```
-
----
-
-## 🚨 Alert Conditions
-
-The project uses these default thresholds:
+The Blynk dashboard displays temperature, humidity, motion status, and the current alert status.
+## System Workflow
 
 ```text
-Temperature > 35°C
-Humidity > 80%
-Motion detected
+DHT22 + PIR Sensor
+        |
+        v
+      ESP32
+        |
+        +------> Red LED Alert
+        |
+        v
+   Wi-Fi Connection
+        |
+        v
+   Blynk Cloud
+        |
+        v
+ Blynk Dashboard
 ```
+## Simulation
 
-If any of these conditions occurs:
+The project was developed and tested using Wokwi.
 
-1. The warning LED turns ON.
-2. An alert is printed in the Serial Monitor.
-3. Alert status is sent to ThingSpeak as `1`.
+Wokwi Project:
+https://wokwi.com/projects/477196815209794561
 
-Normal status is sent as `0`.
+The simulation was tested for:
 
----
+1. Normal temperature and humidity conditions
+2. High temperature alert
+3. Motion detection alert
+4. LED activation during alert conditions
+5. Data transmission to Blynk Cloud
 
-## ☁️ ThingSpeak Dashboard
+## Project Files
 
-Create a ThingSpeak channel with four fields:
+- `sketch.ino` - ESP32 program
+- `diagram.json` - Wokwi circuit configuration
+- `libraries.txt` - Required libraries
+- `.gitignore` - Prevents sensitive and unnecessary files from being committed
 
-| Field | Name |
-|---|---|
-| Field 1 | Temperature |
-| Field 2 | Humidity |
-| Field 3 | Motion |
-| Field 4 | Alert Status |
+## Security
 
-The ESP32 sends sensor readings to ThingSpeak every 20 seconds.
+The Blynk Auth Token is not stored in this repository.
 
----
+Replace the placeholder Auth Token in the code with your own token when running the project.
 
-## 🔑 ThingSpeak API Key
+## Future Improvements
 
-The code contains this placeholder:
+- Add email or push notifications
+- Store historical sensor data
+- Add more environmental sensors
+- Add automatic fan control
+- Add a buzzer for local alerts
 
-```cpp
-const char* THINGSPEAK_API_KEY = "YOUR_WRITE_API_KEY";
-```
+## Author
 
-Create your own ThingSpeak channel and obtain the **Write API Key**.
+**Aditi**
 
-For security, do not publish your real Write API Key in this GitHub repository.
-
-The real key should only be entered into your private Wokwi copy when testing.
-
----
-
-## 🖥️ Wokwi Simulation
-
-This project can be simulated using Wokwi.
-
-The simulated Wi-Fi settings are:
-
-```cpp
-const char* WIFI_SSID = "Wokwi-GUEST";
-const char* WIFI_PASSWORD = "";
-```
-
-### Testing
-
-Start the Wokwi simulation.
-
-The Serial Monitor should show sensor readings such as:
-
-```text
-Temperature: 24.00 C
-Humidity: 40.00 %
-Motion: No motion
-Status: NORMAL
-```
-
-To test the alert, increase the simulated temperature above 35°C.
-
-For example:
-
-```text
-Temperature: 40.00 C
-```
-
-The system should display:
-
-```text
-***** ALERT *****
-High temperature detected!
-```
-
-The LED should also turn ON.
-
----
-
-## 🔐 IoT Security Risks
-
-### 1. Unencrypted Communication
-
-Unencrypted HTTP communication can allow data to be intercepted.
-
-Production IoT systems should use HTTPS or MQTT over TLS where possible.
-
-### 2. Exposed API Keys
-
-Cloud API keys should never be uploaded to a public GitHub repository.
-
-### 3. Default Credentials
-
-Default passwords can allow unauthorized users to access IoT devices.
-
-### 4. Open Ports
-
-Unnecessary open ports increase the attack surface of an IoT device.
-
-### 5. Wi-Fi Credentials
-
-Real Wi-Fi passwords should never be published in public source code.
-
----
-
-## 📁 Project Structure
-
-```text
-iot-environment-monitor/
-│
-├── README.md
-├── sketch.ino
-├── diagram.json
-├── libraries.txt
-└── .gitignore
-```
-
----
-
-## 🎓 Learning Outcomes
-
-This project demonstrates:
-
-- IoT architecture
-- ESP32 programming
-- Sensor interfacing
-- Wi-Fi communication
-- Cloud data transmission
-- Threshold-based alerts
-- Dashboard visualization
-- Basic IoT security
-
----
-
-## 🚀 Future Improvements
-
-Possible improvements include:
-
-- MQ-2 gas sensor
-- Buzzer alarm
-- Email notifications
-- Mobile notifications
-- MQTT communication
-- HTTPS/TLS security
-- OLED display
-- Automatic fan control
-- Secure credential storage
-
----
-
-## ⚠️ Disclaimer
-
-This project is intended for educational purposes. The simulated sensors and simple threshold rules should not be used for real-world fire, gas, security, or other safety-critical monitoring.
+IoT Environment Monitor - College IoT Project
