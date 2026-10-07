@@ -1,0 +1,16 @@
+# Secrets
+secrets.h
+.env
+
+# Build files
+build/
+*.bin
+*.elf
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
