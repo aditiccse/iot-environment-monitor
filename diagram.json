@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "author": "IoT Environment Monitor",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -120,
+      "left": 250,
+      "attrs": {
+        "temperature": "24",
+        "humidity": "40"
+      }
+    },
+    {
+      "type": "wokwi-pir-motion-sensor",
+      "id": "pir1",
+      "top": 80,
+      "left": 250,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 230,
+      "left": 230,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 230,
+      "left": 130,
+      "attrs": {
+        "value": "220"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:3V3",
+      "dht1:VCC",
+      "red",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "dht1:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:15",
+      "dht1:SDA",
+      "green",
+      []
+    ],
+    [
+      "esp:5V",
+      "pir1:VCC",
+      "red",
+      []
+    ],
+    [
+      "esp:GND.2",
+      "pir1:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:13",
+      "pir1:OUT",
+      "blue",
+      []
+    ],
+    [
+      "esp:2",
+      "r1:1",
+      "green",
+      []
+    ],
+    [
+      "r1:2",
+      "led1:A",
+      "green",
+      []
+    ],
+    [
+      "led1:C",
+      "esp:GND.3",
+      "black",
+      []
+    ]
+  ],
+  "dependencies": {}
+}
